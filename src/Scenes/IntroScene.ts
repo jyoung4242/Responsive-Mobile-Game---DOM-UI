@@ -1,11 +1,11 @@
-import { Engine, Scene, SceneActivationContext } from "excalibur";
-import { UILayout } from "../Lib/UILayout";
-import { getLandscapeLayout } from "../UI/Landscape";
-import { getPortraitLayout } from "../UI/Portrait";
+import { Engine, Scene, SceneActivationContext, vec, Vector } from "excalibur";
+import { UI, UIView } from "@peasy-lib/peasy-ui";
+
+import { RootFlex } from "../UI/rootFlex";
+import { FlexContainerState } from "../UI/Components/FlexContainer";
 
 export class IntroScene extends Scene {
-  layout: UILayout | undefined;
-
+  layout: UIView | undefined;
   orientation = "portrait";
   resizeHandler: any;
 
@@ -13,34 +13,125 @@ export class IntroScene extends Scene {
     super();
   }
 
-  onActivate(context: SceneActivationContext<unknown>): void {
-    console.log("intro scene");
-
+  async onActivate(context: SceneActivationContext<unknown>): Promise<void> {
+    //get cnv parent
+    let parentContainer = document.getElementById("cnv")?.parentElement;
+    //get screen size
+    let screenDims = this.engine.screen.viewport;
+    if (!parentContainer) return;
     this.orientation = getOrientation();
-    this.layout = new UILayout(context.engine);
-    this.layout = updateUILayout(this.layout, context.engine, this.orientation);
+    this.layout = UI.create(parentContainer, new IntroSceneUI(this.orientation), IntroSceneUI.template);
+    await this.layout.attached;
+
+    syncHudToCanvas(this.layout);
+    //this.layout.model.dims = { w: screenDims.width, h: screenDims.height };
 
     this.resizeHandler = async () => {
       this.orientation = getOrientation();
-      await this.layout?.resetUI();
-      this.layout = updateUILayout(this.layout as UILayout, context.engine, this.orientation);
+      syncHudToCanvas(this.layout);
+      let displayTable = [
+        ["screen dims", this.engine.screen.width, this.engine.screen.height],
+        ["viewport dims", this.engine.screen.viewport.width, this.engine.screen.viewport.height],
+        ["resolution", this.engine.screen.resolution.width, this.engine.screen.resolution.height],
+        ["contentArea", this.engine.screen.contentArea.width, this.engine.screen.contentArea.height],
+      ];
+      console.table(displayTable);
     };
+    //context.engine.screen.events.on("resize", this.resizeHandler);
     window.addEventListener("resize", this.resizeHandler);
   }
 
-  onPreUpdate(engine: Engine, elapsed: number): void {
-    this.layout?.update();
-  }
-}
-
-function updateUILayout(layout: UILayout, engine: Engine, orientation: string): UILayout {
-  console.log("updateUILayout", orientation, engine.screen.canvas);
-
-  if (orientation == "landscape") getLandscapeLayout(layout, engine);
-  else getPortraitLayout(layout, engine);
-  return layout;
+  onPreUpdate(engine: Engine, elapsed: number): void {}
 }
 
 function getOrientation() {
   return window.matchMedia("(orientation: portrait)").matches ? "portrait" : "landscape";
+}
+
+class IntroSceneUI {
+  width: number = 0;
+  height: number = 0;
+  left: number = 0;
+  top: number = 0;
+  _pixelConversion: number = 1;
+  orientation = "landscape";
+
+  responsiveComponents: any[] = [];
+
+  RootFlex = RootFlex;
+  rootFlexState: FlexContainerState = {
+    id: "rootFlex",
+    orientation: this.orientation,
+    sizing: { landscape: { w: 100, h: 100 }, portrait: { w: 100, h: 100 }, padding: 0 },
+    flexControls: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: 0,
+    },
+    parentContainerId: "ui",
+  };
+
+  static template = `
+  <div id="ui" style="position:absolute; top: 0px; left: 0px; width:500px; height:500px;">
+    <style>
+      
+      #ui {
+       /* transform from the top left of the element */
+        transform-origin: 0 0;
+        /* scale the ui */
+        transform: scale(var(--pixel-conversion), var(--pixel-conversion));
+      }
+    </style>
+    
+    <\${RootFlex === rootFlexState}> 
+    
+  </div>
+  `;
+
+  constructor(orientation: string) {
+    this.orientation = orientation;
+
+    this.responsiveComponents.push(this.rootFlexState);
+
+    window.addEventListener("resize", () => {
+      let orientation = getOrientation();
+      this.responsiveComponents.forEach(component => {
+        component.updateOrientation(orientation);
+      });
+    });
+  }
+
+  get dims() {
+    return { w: this.width, h: this.height, left: this.left, top: this.top };
+  }
+
+  set dims(dims: { w: number; h: number; left: number; top: number }) {
+    this.width = dims.w;
+    this.height = dims.h;
+    this.left = dims.left;
+    this.top = dims.top;
+  }
+}
+
+const calculateExPixelConversion = (screen: ex.Screen, ui: IntroSceneUI) => {
+  const origin = screen.worldToPageCoordinates(Vector.Zero);
+  const singlePixel = screen.worldToPageCoordinates(vec(1, 0)).sub(origin);
+  const pixelConversion = singlePixel.x;
+  document.documentElement.style.setProperty("--pixel-conversion", pixelConversion.toString());
+};
+
+function syncHudToCanvas(hudView: UIView | undefined) {
+  if (!hudView) return;
+  const canvas = document.getElementById("cnv") as HTMLCanvasElement;
+  const hud = document.getElementById("ui") as HTMLDivElement;
+
+  const rect = canvas.getBoundingClientRect();
+
+  hud.style.width = `${rect.width}px`;
+  hud.style.height = `${rect.height}px`;
+  hud.style.top = `${rect.top}px`;
+  hud.style.left = `${rect.left}px`;
+  hudView.model.dims = { w: rect.width, h: rect.height, left: rect.left, top: rect.top };
 }

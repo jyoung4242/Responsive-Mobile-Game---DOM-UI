@@ -1,3 +1,4 @@
+
 /*style.css*/ 
 body {
  box-sizing: border-box;
@@ -7,6 +8,13 @@ body {
  background-color: var(--current-background);
  color: var(--current-foreground);
 }
+
+@font-face {
+    font-family: 'PixelArtFont';
+    src: url('./Assets/Game Assets/PixeloidSans.ttf') format('truetype');        
+    font-weight: normal;
+    font-style: normal;
+  }
 
 .color1 {
  color: #131617;
@@ -25,6 +33,8 @@ color: #34393c;
 }
 
  :root {  
+    --pixel-conversion: \${_pixelConversion}px;  
+    
  /* Dark theme */  
   --dark-background: #34393c;  
   --dark-dark-accent: #131617; 

@@ -1,4 +1,5 @@
 import { ImageSource } from "excalibur";
+import { Signal } from "../../Lib/Signals";
 
 type PercentOfParent = number;
 
@@ -39,6 +40,7 @@ export type FlexChildEndPointPercentagedButtonState = {
 };
 
 export class FlexChildButton {
+  resizeSignal = new Signal("resize");
   private _textElement: HTMLElement | undefined = undefined;
   private _element: HTMLButtonElement | undefined = undefined;
   private _state: any;
@@ -46,10 +48,10 @@ export class FlexChildButton {
 
   public static template = `
         <style>
-            #\${id} {
+            #\${_state.id} {
                 all: unset; 
-                width: \${formatCSSDimension.w};
-                height: \${formatCSSDimension.h};
+                width: \${dims.w}px;
+                height: \${dims.h}px;
                 image-rendering: pixelated;
                 cursor: pointer;
                 background-color: transparent;
@@ -57,14 +59,14 @@ export class FlexChildButton {
                 text-align: center;
                 font-family: PixelArtFont;
                 user-select: none;
-                border:\${borderSlice.overall}px solid transparent;
-                border-image-slice: \${borderSlice.top} \${borderSlice.right} \${borderSlice.bottom} \${borderSlice.left} fill;
-                border-image-width: \${borderSlice.top}px \${borderSlice.right}px \${borderSlice.bottom}px \${borderSlice.left}px;
+                border:\${.borderSlice.overall}px solid transparent;
+                border-image-slice: \${.borderSlice.top} \${.borderSlice.right} \${.borderSlice.bottom} \${.borderSlice.left} fill;
+                border-image-width: \${.borderSlice.top}px \${.borderSlice.right}px \${.borderSlice.bottom}px \${.borderSlice.left}px;
                 border-image-repeat: stretch;
                 border-image-outset: 0;
                 appearance: none;
             }
-            #\${id} > span {
+            #\${_state.id} > span {
                 display: block;
                 color: \${state.fontColor};
                 font-size: \${state.fontSize}px;
@@ -72,8 +74,8 @@ export class FlexChildButton {
             }
             
         </style>
-        <button \${==>element} id="\${id}" \${pointerup@=>upHandler} \${pointerdown@=>downHandler}>
-          <span \${==>textElement}>\${text}</span>
+        <button \${==>_element} id="\${_state.id}" \${pointerup@=>upHandler} \${pointerdown@=>downHandler}>
+          <span \${==>_textElement}>\${_state.text}</span>
         </button>
     `;
 
@@ -83,13 +85,19 @@ export class FlexChildButton {
       this._state.fontDetailsfontColor = "white"; // Default color if not provided
     }
 
+    this.resizeSignal.listen((params: CustomEvent) => {
+      let orientation = params.detail.params[0];
+      this._state.orientation = orientation;
+    });
+
     setTimeout(() => {
       this.init();
     }, 25);
   }
 
   init() {
-    this._element!.style.borderImageSource = `url('${this._state.graphics?.upImage}')`;
+    this._element!.style.borderImageSource = `url('${this._state.graphics?.upImage.path}')`;
+    console.log(this._element?.style.borderImageSource);
   }
 
   static create(config: FlexChildEndPointPercentagedButtonState) {
@@ -109,40 +117,20 @@ export class FlexChildButton {
     // Handle percentage-based dimensions intelligently
 
     if (this._state.orientation === "landscape") {
-      let dimwidth = this._state.sizing.landscape.w * parentWidth;
-      let dimheight = this._state.sizing.landscape.h * parentHeight;
+      let dimwidth = (this._state.sizing.landscape.w / 100) * parentWidth;
+      let dimheight = (this._state.sizing.landscape.h / 100) * parentHeight;
       return {
         w: dimwidth,
         h: dimheight,
       };
     } else {
-      let dimwidth = this._state.sizing.portrait.w * parentWidth;
-      let dimheight = this._state.sizing.portrait.h * parentHeight;
+      let dimwidth = (this._state.sizing.portrait.w / 100) * parentWidth;
+      let dimheight = (this._state.sizing.portrait.h / 100) * parentHeight;
       return {
         w: dimwidth,
         h: dimheight,
       };
     }
-  }
-
-  // Static helper method to format dimension values with appropriate units for CSS
-  static formatCssDimension(value: number | string | undefined): string {
-    if (value === undefined) return "0";
-
-    if (typeof value === "number") {
-      return `${value}px`;
-    }
-
-    // If it's already a string with units (%, vh, vw, etc.), return as is
-    return value;
-  }
-
-  get formatCSSDimension() {
-    return {
-      w: FlexChildButton.formatCssDimension(this.dims.w),
-      h: FlexChildButton.formatCssDimension(this.dims.h),
-      font: FlexChildButton.formatCssDimension(this._state.fontSize),
-    };
   }
 
   get borderSlice() {
@@ -181,7 +169,7 @@ export class FlexChildButton {
     //switch image
     this._element!.style.borderImageSource = "none";
     this._textElement!.style.transform = "translateY(0px)";
-    this._element!.style.borderImageSource = `url('${this._state.graphics?.upImage}')`;
+    this._element!.style.borderImageSource = `url('${this._state.graphics?.upImage.path}')`;
     this._state.clickCallback();
     this._buttonStatus = false;
   }
@@ -189,7 +177,7 @@ export class FlexChildButton {
   downHandler() {
     this._element!.style.borderImageSource = "none";
     this._textElement!.style.transform = "translateY(2px)";
-    this._element!.style.borderImageSource = `url('${this._state.graphics?.downButtonImage}')`;
+    this._element!.style.borderImageSource = `url('${this._state.graphics?.downImage.path}')`;
     this._buttonStatus = true;
   }
 }

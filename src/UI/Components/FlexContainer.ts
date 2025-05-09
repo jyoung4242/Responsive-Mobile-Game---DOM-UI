@@ -39,19 +39,19 @@ export class FlexContainer {
   private _state: FlexContainerState = {
     id: "",
     orientation: "landscape",
-    sizing: { landscape: { w: 0, h: 0 }, portrait: { w: 0, h: 0 } },
-    flexControls: {},
+    sizing: { landscape: { w: 0, h: 0 }, portrait: { w: 0, h: 0 }, padding: 0 },
+    flexControls: { gap: 0 },
     parentContainerId: "",
   };
 
   public static template = `
     <style>
       #\${_state.id} {
-        width: \${formatCSSDimension.w};
-        height: \${formatCSSDimension.h};
+        width: \${dims.w};
+        height: \${dims.h};
         image-rendering: pixelated;
         box-sizing: border-box;
-        padding: \${formatCSSDimension.padding};
+        padding: \${dims.padding}px;
         border:\${borderSlice.overall}px solid transparent;
         border-image-slice: \${borderSlice.top} \${borderSlice.right} \${borderSlice.bottom} \${borderSlice.left} fill;
         border-image-width: \${borderSlice.top}px \${borderSlice.right}px \${borderSlice.bottom}px \${borderSlice.left}px;
@@ -62,7 +62,7 @@ export class FlexContainer {
         flex-wrap: \${_state.flexWrap};
         justify-content: \${_state.justifyContent};
         align-items: \${_state.alignItems };
-        gap: \${formatCSSDimension.gap};
+        gap: \${dims.gap}px;
       }
     </style>
     <div \${==>element} id="\${id}">

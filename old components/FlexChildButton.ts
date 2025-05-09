@@ -6,6 +6,7 @@ export type PositionUnit = number | string; // Allow for both numeric (px) and s
 export type FlexChildButtonState = {
   id: string;
   orientation: string;
+  parentContainerId: string; // ID of the parent container for positioning
   responsiveLayoutData: {
     landscape: { w: SizeUnit; h: SizeUnit };
     portrait: { w: SizeUnit; h: SizeUnit };

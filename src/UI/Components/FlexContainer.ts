@@ -1,4 +1,5 @@
 import { ImageSource } from "excalibur";
+import { Signal } from "../../Lib/Signals";
 
 type PercentOfParent = number;
 
@@ -29,16 +30,18 @@ export type FlexContainerState = {
     alignContent?: "normal" | "flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "stretch";
     gap?: number | string; // Allow for both numeric (px) and string values (%, em, etc.)
   };
-  parentContainerId?: string; // ID of the parent container for positioning
+  parentContainerId: string; // ID of the parent container for positioning
 };
 
 export class FlexContainer {
+  resizeSignal = new Signal("resize");
   private _element: HTMLElement | undefined = undefined;
   private _state: FlexContainerState = {
     id: "",
     orientation: "landscape",
     sizing: { landscape: { w: 0, h: 0 }, portrait: { w: 0, h: 0 } },
     flexControls: {},
+    parentContainerId: "",
   };
 
   public static template = `
@@ -72,6 +75,11 @@ export class FlexContainer {
     setTimeout(() => {
       this.init();
     }, 25);
+
+    this.resizeSignal.listen((params: CustomEvent) => {
+      let orientation = params.detail.params[0];
+      this._state.orientation = orientation;
+    });
   }
 
   init() {
@@ -79,12 +87,8 @@ export class FlexContainer {
       this._element!.style.borderImageSource = `url('${this._state.graphics.backgroundImage}')`;
   }
 
-  updateOrientation(orientation: "landscape" | "portrait") {
-    this._state.orientation = orientation;
-  }
-
   static create(containerState: FlexContainerState) {
-    console.log("containerState", containerState);
+    //console.log("containerState", containerState);
     return new FlexContainer(containerState);
   }
 

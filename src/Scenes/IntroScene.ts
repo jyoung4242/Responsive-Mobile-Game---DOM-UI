@@ -3,6 +3,7 @@ import { UI, UIView } from "@peasy-lib/peasy-ui";
 
 import { RootFlex } from "../UI/rootFlex";
 import { FlexContainerState } from "../UI/Components/FlexContainer";
+import { Signal } from "../Lib/Signals";
 
 export class IntroScene extends Scene {
   layout: UIView | undefined;
@@ -17,14 +18,16 @@ export class IntroScene extends Scene {
     //get cnv parent
     let parentContainer = document.getElementById("cnv")?.parentElement;
     //get screen size
-    let screenDims = this.engine.screen.viewport;
+
     if (!parentContainer) return;
-    this.orientation = getOrientation();
+
     this.layout = UI.create(parentContainer, new IntroSceneUI(this.orientation), IntroSceneUI.template);
     await this.layout.attached;
 
+    this.orientation = getOrientation();
+    console.log("initial orientation", this.orientation);
+
     syncHudToCanvas(this.layout);
-    //this.layout.model.dims = { w: screenDims.width, h: screenDims.height };
 
     this.resizeHandler = async () => {
       this.orientation = getOrientation();
@@ -37,7 +40,6 @@ export class IntroScene extends Scene {
       ];
       console.table(displayTable);
     };
-    //context.engine.screen.events.on("resize", this.resizeHandler);
     window.addEventListener("resize", this.resizeHandler);
   }
 
@@ -49,6 +51,7 @@ function getOrientation() {
 }
 
 class IntroSceneUI {
+  resizeSignal = new Signal("resize");
   width: number = 0;
   height: number = 0;
   left: number = 0;
@@ -97,9 +100,7 @@ class IntroSceneUI {
 
     window.addEventListener("resize", () => {
       let orientation = getOrientation();
-      this.responsiveComponents.forEach(component => {
-        component.updateOrientation(orientation);
-      });
+      this.resizeSignal.send([orientation]);
     });
   }
 
@@ -124,9 +125,9 @@ const calculateExPixelConversion = (screen: ex.Screen, ui: IntroSceneUI) => {
 
 function syncHudToCanvas(hudView: UIView | undefined) {
   if (!hudView) return;
+
   const canvas = document.getElementById("cnv") as HTMLCanvasElement;
   const hud = document.getElementById("ui") as HTMLDivElement;
-
   const rect = canvas.getBoundingClientRect();
 
   hud.style.width = `${rect.width}px`;
@@ -134,4 +135,5 @@ function syncHudToCanvas(hudView: UIView | undefined) {
   hud.style.top = `${rect.top}px`;
   hud.style.left = `${rect.left}px`;
   hudView.model.dims = { w: rect.width, h: rect.height, left: rect.left, top: rect.top };
+  hudView.model.resizeSignal.send([getOrientation()]);
 }

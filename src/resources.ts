@@ -7,6 +7,11 @@ import greenButtonUp from "./Assets/Game Assets/greenButtonUp.png";
 import greenButtonDown from "./Assets/Game Assets/greenButtonDown.png";
 import panel from "./Assets/Game Assets/brownPanel.png";
 import transparentPanel from "./Assets/Game Assets/transparentTexture.png";
+import helpSVG from "./Assets/Game Assets/help.svg";
+import settingsSVG from "./Assets/Game Assets/settings.svg";
+
+console.log(helpSVG);
+console.log(settingsSVG);
 
 export const Resources = {
   whiteButton: new ImageSource(whiteButton),
@@ -16,6 +21,8 @@ export const Resources = {
   greenButtonDown: new ImageSource(greenButtonDown),
   panel: new ImageSource(panel),
   transparentPanel: new ImageSource(transparentPanel),
+  helpSVG: new ImageSource(helpSVG),
+  settingsSVG: new ImageSource(settingsSVG),
 };
 
 export const loader = new Loader();

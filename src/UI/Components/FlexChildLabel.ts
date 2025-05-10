@@ -9,6 +9,12 @@ export type FlexChildEndPointPercentagedLabelState = {
   sizing: {
     landscape: { w: PercentOfParent; h: PercentOfParent };
     portrait: { w: PercentOfParent; h: PercentOfParent };
+    padding: {
+      top: number;
+      left: number;
+      right: number;
+      bottom: number;
+    };
   };
   graphics?: {
     image?: ImageSource;
@@ -47,7 +53,7 @@ export class FlexChildLabel {
                 image-rendering: pixelated;
       
                 background-color: transparent;
-                padding: 0;
+                padding: \${dims.padding.top}px \${dims.padding.right}px \${dims.padding.bottom}px \${dims.padding.left}px;
                 text-align: center;
                 font-family: PixelArtFont;
                 user-select: none;
@@ -90,7 +96,6 @@ export class FlexChildLabel {
   init() {
     if (this._state && this._state.graphics?.image) {
       this._element!.style.borderImageSource = `url('${this._state.graphics.image.path}')`;
-      console.log(this._element?.style.borderImageSource);
     }
   }
 
@@ -116,6 +121,7 @@ export class FlexChildLabel {
       return {
         w: dimwidth,
         h: dimheight,
+        padding: this._state.sizing.padding,
       };
     } else {
       let dimwidth = (this._state.sizing.portrait.w / 100) * parentWidth;
@@ -123,6 +129,7 @@ export class FlexChildLabel {
       return {
         w: dimwidth,
         h: dimheight,
+        padding: this._state.sizing.padding,
       };
     }
   }

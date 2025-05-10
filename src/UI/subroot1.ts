@@ -108,7 +108,7 @@ export class SubRoot1 extends FlexContainer {
         image-rendering: pixelated;
         box-sizing: border-box;
         padding: \${dims.padding}px;
-        border: 2px solid blue;
+        /* border: 2px solid blue; */
         display: flex;
         flex-direction: \${_state.flexControls.flexDirection};
         flex-wrap: \${_state.flexControls.flexWrap};

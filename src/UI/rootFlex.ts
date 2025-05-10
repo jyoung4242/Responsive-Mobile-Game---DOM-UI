@@ -21,7 +21,7 @@ export class RootFlex extends FlexContainer {
   subRootState2: FlexContainerState = {
     id: "subroot2",
     orientation: "landscape",
-    sizing: { landscape: { w: 20, h: 95 }, portrait: { w: 70, h: 25 }, padding: 2 },
+    sizing: { landscape: { w: 20, h: 95 }, portrait: { w: 90, h: 10 }, padding: 2 },
     flexControls: {
       flexDirection: "column",
       flexWrap: "nowrap",

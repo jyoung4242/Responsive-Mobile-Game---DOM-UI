@@ -36,7 +36,7 @@ export type FlexContainerState = {
 export class FlexContainer {
   resizeSignal = new Signal("resize");
   private _element: HTMLElement | undefined = undefined;
-  private _state: FlexContainerState = {
+  _state: FlexContainerState = {
     id: "",
     orientation: "landscape",
     sizing: { landscape: { w: 0, h: 0 }, portrait: { w: 0, h: 0 }, padding: 0 },

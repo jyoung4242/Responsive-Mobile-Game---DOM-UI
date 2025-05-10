@@ -34,6 +34,11 @@ export class RootFlex extends FlexContainer {
 
   constructor(state: FlexContainerState) {
     super(state);
+    this.resizeSignal.listen((params: CustomEvent) => {
+      let orientation = params.detail.params[0];
+      this._state.orientation = orientation;
+      this._state.flexControls.flexDirection = orientation === "landscape" ? "row" : "column";
+    });
   }
 
   public static template = `

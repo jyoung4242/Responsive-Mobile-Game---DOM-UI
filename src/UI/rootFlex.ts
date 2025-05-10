@@ -38,6 +38,7 @@ export class RootFlex extends FlexContainer {
       let orientation = params.detail.params[0];
       this._state.orientation = orientation;
       this._state.flexControls.flexDirection = orientation === "landscape" ? "row" : "column";
+      this.mobileLogger.send(["changed orientation", orientation]);
     });
   }
 

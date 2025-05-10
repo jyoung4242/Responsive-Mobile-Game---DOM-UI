@@ -1,4 +1,4 @@
-import { Engine, Scene, SceneActivationContext, vec, Vector } from "excalibur";
+import { Color, Engine, LogLevel, Scene, SceneActivationContext, ScreenAppender, ScreenAppenderOptions, vec, Vector } from "excalibur";
 import { UI, UIView } from "@peasy-lib/peasy-ui";
 
 import { RootFlex } from "../UI/rootFlex";
@@ -6,15 +6,30 @@ import { FlexContainerState } from "../UI/Components/FlexContainer";
 import { Signal } from "../Lib/Signals";
 
 export class IntroScene extends Scene {
+  mobileLogger = new Signal("mobileLogger");
   layout: UIView | undefined;
   orientation = "portrait";
   resizeHandler: any;
+  screenAppender: ScreenAppender | undefined;
 
   constructor() {
     super();
   }
 
   async onActivate(context: SceneActivationContext<unknown>): Promise<void> {
+    let SAOptions: ScreenAppenderOptions = {
+      engine: context.engine,
+      width: 500,
+      height: 500,
+      xPos: 0,
+      color: Color.White,
+      zIndex: 100,
+    };
+    this.screenAppender = new ScreenAppender(SAOptions);
+
+    this.mobileLogger.listen((params: CustomEvent) => {
+      this.screenAppender?.log(LogLevel.Info, [params.detail.params[0], params.detail.params[1]]);
+    });
     //get cnv parent
     let parentContainer = document.getElementById("cnv")?.parentElement;
     //get screen size

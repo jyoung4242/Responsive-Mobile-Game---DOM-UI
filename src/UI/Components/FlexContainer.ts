@@ -34,6 +34,7 @@ export type FlexContainerState = {
 };
 
 export class FlexContainer {
+  mobileLogger = new Signal("mobileLogger");
   resizeSignal = new Signal("resize");
   private _element: HTMLElement | undefined = undefined;
   _state: FlexContainerState = {

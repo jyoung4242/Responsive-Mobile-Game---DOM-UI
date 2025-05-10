@@ -65,13 +65,13 @@ class IntroSceneUI {
   rootFlexState: FlexContainerState = {
     id: "rootFlex",
     orientation: this.orientation,
-    sizing: { landscape: { w: 100, h: 100 }, portrait: { w: 100, h: 100 }, padding: 0 },
+    sizing: { landscape: { w: 100, h: 100 }, portrait: { w: 100, h: 100 }, padding: 5 },
     flexControls: {
       flexDirection: "row",
       flexWrap: "wrap",
-      justifyContent: "center",
+      justifyContent: "flex-start",
       alignItems: "center",
-      gap: 0,
+      gap: 30,
     },
     parentContainerId: "ui",
   };

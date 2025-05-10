@@ -21,6 +21,12 @@ export class SubRoot1 extends FlexContainer {
       upImage: Resources.greenButtonUp,
       downImage: Resources.greenButtonDown,
     },
+    fontDetails: {
+      maxFont: 2,
+      minFont: 1,
+      fontScale: 0.5,
+      fontColor: "white",
+    },
     clickCallback: () => console.log("button1 clicked"),
   };
 

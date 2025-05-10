@@ -3,7 +3,7 @@ import { Signal } from "../../Lib/Signals";
 
 type PercentOfParent = number;
 
-export type FlexChildEndPointPercentagedButtonState = {
+export type FlexChildEndPointPercentagedLabelState = {
   id: string;
   orientation: string;
   sizing: {
@@ -11,17 +11,8 @@ export type FlexChildEndPointPercentagedButtonState = {
     portrait: { w: PercentOfParent; h: PercentOfParent };
   };
   graphics?: {
-    upImage?: ImageSource;
-    downImage?: ImageSource;
-    nineSliceUp?: {
-      borderPadding: {
-        top: number;
-        left: number;
-        right: number;
-        bottom: number;
-      };
-    };
-    nineSliceDown?: {
+    image?: ImageSource;
+    nineSlice?: {
       borderPadding: {
         top: number;
         left: number;
@@ -31,7 +22,6 @@ export type FlexChildEndPointPercentagedButtonState = {
     };
   };
   text?: string;
-
   fontDetails?: {
     fontSize?: string | number; // Allow for custom font sizes
     maxFont?: number;
@@ -39,16 +29,14 @@ export type FlexChildEndPointPercentagedButtonState = {
     fontScale?: number;
     fontColor?: string; // Allow for custom font colors
   };
-
-  clickCallback: () => void;
   parentContainerId: string; // ID of the parent container for positioning
 };
 
-export class FlexChildButton {
+export class FlexChildLabel {
   resizeSignal = new Signal("resize");
   private _textElement: HTMLElement | undefined = undefined;
   private _element: HTMLButtonElement | undefined = undefined;
-  private _state: any;
+  private _state: FlexChildEndPointPercentagedLabelState;
   private _buttonStatus: boolean = false;
 
   public static template = `
@@ -70,11 +58,12 @@ export class FlexChildButton {
                 border-image-repeat: stretch;
                 border-image-outset: 0;
                 appearance: none;
+                font-size: clamp(\${state.fontDetails.minFont}rem, \${state.fontDetails.fontScale}vw, \${state.fontDetails.maxFont}rem);
             }
             #\${_state.id} > span {
                 display: block;
-                color: \${_state.fontDetails.fontColor};
-                font-size: clamp(\${_state.fontDetails.minFont}rem, \${_state.fontDetails.fontScale}vw, \${_state.fontDetails.maxFont}rem);
+                color: \${state.fontColor};
+                font-size: \${state.fontSize}px;
                 width: 100%;
             }
             
@@ -84,10 +73,10 @@ export class FlexChildButton {
         </button>
     `;
 
-  constructor(state: FlexChildEndPointPercentagedButtonState) {
+  constructor(state: FlexChildEndPointPercentagedLabelState) {
     this._state = state;
     if (!state.fontDetails?.fontColor) {
-      this._state.fontDetailsfontColor = "white"; // Default color if not provided
+      this._state!.fontDetails!.fontColor = "white"; // Default color if not provided
     }
 
     this.resizeSignal.listen((params: CustomEvent) => {
@@ -101,12 +90,14 @@ export class FlexChildButton {
   }
 
   init() {
-    this._element!.style.borderImageSource = `url('${this._state.graphics?.upImage.path}')`;
-    console.log(this._element?.style.borderImageSource);
+    if (this._state && this._state.graphics?.image) {
+      this._element!.style.borderImageSource = `url('${this._state.graphics.image.path}')`;
+      console.log(this._element?.style.borderImageSource);
+    }
   }
 
-  static create(config: FlexChildEndPointPercentagedButtonState) {
-    return new FlexChildButton(config);
+  static create(config: FlexChildEndPointPercentagedLabelState) {
+    return new FlexChildLabel(config);
   }
 
   get dims() {
@@ -139,50 +130,21 @@ export class FlexChildButton {
   }
 
   get borderSlice() {
-    let largestUpBorder = Math.max(
-      this._state.nineSliceUp?.borderPadding.top || 0,
-      this._state.nineSliceUp?.borderPadding.left || 0,
-      this._state.nineSliceUp?.borderPadding.right || 0,
-      this._state.nineSliceUp?.borderPadding.bottom || 0
-    );
-    let largestDownBorder = Math.max(
-      this._state.nineSliceDown?.borderPadding.top || 0,
-      this._state.nineSliceDown?.borderPadding.left || 0,
-      this._state.nineSliceDown?.borderPadding.right || 0,
-      this._state.nineSliceDown?.borderPadding.bottom || 0
-    );
-    if (this._buttonStatus) {
-      return {
-        overall: largestDownBorder,
-        top: this._state.nineSliceDown?.borderPadding.top || 0,
-        left: this._state.nineSliceDown?.borderPadding.left || 0,
-        right: this._state.nineSliceDown?.borderPadding.right || 0,
-        bottom: this._state.nineSliceDown?.borderPadding.bottom || 0,
-      };
-    } else {
-      return {
-        overall: largestUpBorder,
-        top: this._state.nineSliceUp?.borderPadding.top || 0,
-        left: this._state.nineSliceUp?.borderPadding.left || 0,
-        right: this._state.nineSliceUp?.borderPadding.right || 0,
-        bottom: this._state.nineSliceUp?.borderPadding.bottom || 0,
-      };
-    }
-  }
+    if (!this._state.graphics || !this._state.graphics.nineSlice) return;
 
-  upHandler() {
-    //switch image
-    this._element!.style.borderImageSource = "none";
-    this._textElement!.style.transform = "translateY(0px)";
-    this._element!.style.borderImageSource = `url('${this._state.graphics?.upImage.path}')`;
-    this._state.clickCallback();
-    this._buttonStatus = false;
-  }
+    let largestBorder = Math.max(
+      this._state.graphics.nineSlice.borderPadding.top || 0,
+      this._state.graphics.nineSlice.borderPadding.left || 0,
+      this._state.graphics.nineSlice.borderPadding.right || 0,
+      this._state.graphics.nineSlice.borderPadding.bottom || 0
+    );
 
-  downHandler() {
-    this._element!.style.borderImageSource = "none";
-    this._textElement!.style.transform = "translateY(2px)";
-    this._element!.style.borderImageSource = `url('${this._state.graphics?.downImage.path}')`;
-    this._buttonStatus = true;
+    return {
+      overall: largestBorder,
+      top: this._state.graphics.nineSlice.borderPadding.top || 0,
+      left: this._state.graphics.nineSlice.borderPadding.left || 0,
+      right: this._state.graphics.nineSlice.borderPadding.right || 0,
+      bottom: this._state.graphics.nineSlice.borderPadding.bottom || 0,
+    };
   }
 }

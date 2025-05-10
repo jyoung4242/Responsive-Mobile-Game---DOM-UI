@@ -1,12 +1,27 @@
 import { FlexContainer, FlexContainerState } from "./Components/FlexContainer";
 import { SubRoot1 } from "./subroot1";
+import { SubRoot2 } from "./subroot2";
 
 export class RootFlex extends FlexContainer {
   SubRoot = SubRoot1;
+  SubRoot2 = SubRoot2; // Placeholder for another subroot, can be replaced with actual class
   subRootState: FlexContainerState = {
     id: "subroot1",
     orientation: "landscape",
     sizing: { landscape: { w: 45, h: 95 }, portrait: { w: 70, h: 70 }, padding: 2 },
+    flexControls: {
+      flexDirection: "column",
+      flexWrap: "nowrap",
+      justifyContent: "space-between",
+      alignItems: "center",
+      gap: 3,
+    },
+    parentContainerId: "rootFlex",
+  };
+  subRootState2: FlexContainerState = {
+    id: "subroot2",
+    orientation: "landscape",
+    sizing: { landscape: { w: 20, h: 95 }, portrait: { w: 70, h: 25 }, padding: 2 },
     flexControls: {
       flexDirection: "column",
       flexWrap: "nowrap",
@@ -42,7 +57,8 @@ export class RootFlex extends FlexContainer {
       }
     </style>
     <div \${==>_element} id="\${_state.id}">
-       <\${SubRoot === subRootState}>
+        <\${SubRoot2 === subRootState2}>
+        <\${SubRoot === subRootState}>
     </div>
   `;
 

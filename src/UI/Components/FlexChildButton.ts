@@ -102,7 +102,6 @@ export class FlexChildButton {
 
   init() {
     this._element!.style.borderImageSource = `url('${this._state.graphics?.upImage.path}')`;
-    console.log(this._element?.style.borderImageSource);
   }
 
   static create(config: FlexChildEndPointPercentagedButtonState) {

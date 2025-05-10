@@ -83,7 +83,7 @@ class IntroSceneUI {
     sizing: { landscape: { w: 100, h: 100 }, portrait: { w: 100, h: 100 }, padding: 5 },
     flexControls: {
       flexDirection: "row",
-      flexWrap: "wrap",
+      flexWrap: "nowrap",
       justifyContent: "flex-start",
       alignItems: "center",
       gap: 30,

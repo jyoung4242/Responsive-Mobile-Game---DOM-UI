@@ -5,7 +5,6 @@ import { FlexContainer, FlexContainerState } from "./Components/FlexContainer";
 export class SubRoot1 extends FlexContainer {
   constructor(state: FlexContainerState) {
     super(state);
-    console.log(this.buttonState);
   }
 
   Button = FlexChildButton;

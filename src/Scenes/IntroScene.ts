@@ -25,10 +25,10 @@ export class IntroScene extends Scene {
       color: Color.White,
       zIndex: 100,
     };
-    this.screenAppender = new ScreenAppender(SAOptions);
+    //this.screenAppender = new ScreenAppender(SAOptions);
 
     this.mobileLogger.listen((params: CustomEvent) => {
-      this.screenAppender?.log(LogLevel.Info, [params.detail.params[0], params.detail.params[1]]);
+      //this.screenAppender?.log(LogLevel.Info, [params.detail.params[0], params.detail.params[1]]);
     });
     //get cnv parent
     let parentContainer = document.getElementById("cnv")?.parentElement;
@@ -40,7 +40,6 @@ export class IntroScene extends Scene {
     await this.layout.attached;
 
     this.orientation = getOrientation();
-    console.log("initial orientation", this.orientation);
 
     syncHudToCanvas(this.layout);
 

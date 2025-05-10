@@ -6,6 +6,7 @@ import downButtonImage from "./Assets/Game Assets/button_rectangle_gradient.png"
 import greenButtonUp from "./Assets/Game Assets/greenButtonUp.png";
 import greenButtonDown from "./Assets/Game Assets/greenButtonDown.png";
 import panel from "./Assets/Game Assets/brownPanel.png";
+import transparentPanel from "./Assets/Game Assets/transparentTexture.png";
 
 export const Resources = {
   whiteButton: new ImageSource(whiteButton),
@@ -14,6 +15,7 @@ export const Resources = {
   greenButtonUp: new ImageSource(greenButtonUp),
   greenButtonDown: new ImageSource(greenButtonDown),
   panel: new ImageSource(panel),
+  transparentPanel: new ImageSource(transparentPanel),
 };
 
 export const loader = new Loader();

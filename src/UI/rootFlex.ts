@@ -1,3 +1,4 @@
+import { Resources } from "../resources";
 import { FlexContainer, FlexContainerState } from "./Components/FlexContainer";
 import { SubRoot1 } from "./subroot1";
 import { SubRoot2 } from "./subroot2";
@@ -22,10 +23,21 @@ export class RootFlex extends FlexContainer {
     id: "subroot2",
     orientation: "landscape",
     sizing: { landscape: { w: 20, h: 95 }, portrait: { w: 90, h: 10 }, padding: 2 },
+    graphics: {
+      backgroundImage: Resources.panel,
+      nineSlice: {
+        borderPadding: {
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        },
+      },
+    },
     flexControls: {
       flexDirection: "column",
       flexWrap: "nowrap",
-      justifyContent: "space-between",
+      justifyContent: "flex-start",
       alignItems: "center",
       gap: 3,
     },

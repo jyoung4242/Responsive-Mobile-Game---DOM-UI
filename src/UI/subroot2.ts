@@ -1,11 +1,45 @@
 import { Resources } from "../resources";
 import { FlexChildButton, FlexChildEndPointPercentagedButtonState } from "./Components/FlexChildButton";
+import { FlexChildEndPointPercentagedLabelState, FlexChildLabel } from "./Components/FlexChildLabel";
 import { FlexContainer, FlexContainerState } from "./Components/FlexContainer";
 
 export class SubRoot2 extends FlexContainer {
   constructor(state: FlexContainerState) {
     super(state);
+    this.resizeSignal.listen((params: CustomEvent) => {
+      let orientation = params.detail.params[0];
+      this._state.orientation = orientation;
+      this._state.flexControls.flexDirection = orientation === "landscape" ? "column" : "row";
+      this._state.flexControls.justifyContent = orientation === "landscape" ? "flex-start" : "center";
+    });
   }
+
+  label = FlexChildLabel;
+  lable1State: FlexChildEndPointPercentagedLabelState = {
+    id: "title",
+    orientation: "landscape",
+    text: "Time Wasters",
+    sizing: { landscape: { w: 100, h: 10 }, portrait: { w: 60, h: 50 } },
+    fontDetails: {
+      maxFont: 3,
+      minFont: 1,
+      fontScale: 1,
+      fontColor: "white",
+    },
+    graphics: {
+      image: Resources.transparentPanel,
+      nineSlice: {
+        borderPadding: {
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        },
+      },
+    },
+
+    parentContainerId: "subroot2",
+  };
 
   public static template = `
     <style>
@@ -25,8 +59,7 @@ export class SubRoot2 extends FlexContainer {
       }
     </style>
     <div \${==>_element} id="\${_state.id}">
-       <!-- Content -->
-
+       <\${label === lable1State}>
     </div>
   `;
 

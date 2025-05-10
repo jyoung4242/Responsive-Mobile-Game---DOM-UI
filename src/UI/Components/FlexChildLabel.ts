@@ -37,7 +37,6 @@ export class FlexChildLabel {
   private _textElement: HTMLElement | undefined = undefined;
   private _element: HTMLButtonElement | undefined = undefined;
   private _state: FlexChildEndPointPercentagedLabelState;
-  private _buttonStatus: boolean = false;
 
   public static template = `
         <style>
@@ -46,7 +45,7 @@ export class FlexChildLabel {
                 width: \${dims.w}px;
                 height: \${dims.h}px;
                 image-rendering: pixelated;
-                cursor: pointer;
+      
                 background-color: transparent;
                 padding: 0;
                 text-align: center;
@@ -58,19 +57,18 @@ export class FlexChildLabel {
                 border-image-repeat: stretch;
                 border-image-outset: 0;
                 appearance: none;
-                font-size: clamp(\${state.fontDetails.minFont}rem, \${state.fontDetails.fontScale}vw, \${state.fontDetails.maxFont}rem);
+                
             }
             #\${_state.id} > span {
                 display: block;
-                color: \${state.fontColor};
-                font-size: \${state.fontSize}px;
+                color: \${_state.fontDetails.fontColor};
+                font-size: clamp(\${_state.fontDetails.minFont}rem, \${_state.fontDetails.fontScale}em, \${_state.fontDetails.maxFont}rem);
                 width: 100%;
             }
-            
         </style>
-        <button \${==>_element} id="\${_state.id}" \${pointerup@=>upHandler} \${pointerdown@=>downHandler}>
-          <span \${==>_textElement}>\${_state.text}</span>
-        </button>
+        <div \${==>_element} id="\${_state.id}">
+          <span \${==>_textElement} >\${_state.text} </span>
+        </div>
     `;
 
   constructor(state: FlexChildEndPointPercentagedLabelState) {

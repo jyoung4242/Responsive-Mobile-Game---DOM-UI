@@ -43,6 +43,7 @@ export class FlexChildIcon {
   public static template = `
         <style>
             #\${_state.id} {
+            touch-action: manipulation;
                 all: unset; 
                 width: \${dims.w}px;
                 height: \${dims.h}px;

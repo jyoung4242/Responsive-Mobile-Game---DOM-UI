@@ -51,7 +51,7 @@ export class FlexChildLabel {
                 width: \${dims.w}px;
                 height: \${dims.h}px;
                 image-rendering: pixelated;
-      
+      touch-action: manipulation;
                 background-color: transparent;
                 padding: \${dims.padding.top}px \${dims.padding.right}px \${dims.padding.bottom}px \${dims.padding.left}px;
                 text-align: center;

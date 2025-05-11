@@ -57,6 +57,7 @@ export class RootFlex extends FlexContainer {
   public static template = `
     <style>
       #\${_state.id} {
+      touch-action: manipulation;
         top: 0;
         left: 0;
         position: absolute;

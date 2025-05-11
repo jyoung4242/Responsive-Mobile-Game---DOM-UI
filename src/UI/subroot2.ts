@@ -25,7 +25,7 @@ export class SubRoot2 extends FlexContainer {
     fontDetails: {
       maxFont: 3,
       minFont: 1,
-      fontScale: 2.5,
+      fontScale: 2.25,
       fontColor: "white",
     },
     graphics: {

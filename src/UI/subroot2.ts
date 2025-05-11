@@ -12,13 +12,38 @@ export class SubRoot2 extends FlexContainer {
       let orientation = params.detail.params[0];
       this._state.orientation = orientation;
       this._state.flexControls.flexDirection = orientation === "landscape" ? "column" : "row";
-      this._state.flexControls.justifyContent = orientation === "landscape" ? "flex-start" : "center";
+      this._state.flexControls.justifyContent = orientation === "landscape" ? "space-between" : "center";
     });
   }
 
   label = FlexChildLabel;
   lable1State: FlexChildEndPointPercentagedLabelState = {
     id: "title",
+    orientation: "landscape",
+    text: "Time Wasters",
+    sizing: { landscape: { w: 100, h: 10 }, portrait: { w: 60, h: 50 }, padding: { top: 10, left: 2, right: 2, bottom: 10 } },
+    fontDetails: {
+      maxFont: 3,
+      minFont: 1,
+      fontScale: 1,
+      fontColor: "white",
+    },
+    graphics: {
+      image: Resources.transparentPanel,
+      nineSlice: {
+        borderPadding: {
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        },
+      },
+    },
+
+    parentContainerId: "subroot2",
+  };
+  lable2State: FlexChildEndPointPercentagedLabelState = {
+    id: "title2",
     orientation: "landscape",
     text: "Time Wasters",
     sizing: { landscape: { w: 100, h: 10 }, portrait: { w: 60, h: 50 }, padding: { top: 10, left: 2, right: 2, bottom: 10 } },
@@ -70,6 +95,32 @@ export class SubRoot2 extends FlexContainer {
     parentContainerId: "subroot2",
     svgString: settingsSVG,
   };
+  icon3: FlexChildEndPointPercentagedIconState = {
+    id: "icon3",
+    svgId: "path-1",
+    orientation: "landscape",
+    alttext: "Help Menu",
+    graphics: {
+      image: Resources.helpSVG,
+    },
+    fontDetails: { fontColor: "whitesmoke" },
+    sizing: { landscape: { w: 10, h: 10 }, portrait: { w: 10, h: 10 }, padding: { top: 2, left: 2, right: 2, bottom: 2 } },
+    parentContainerId: "iconWrapper",
+    svgString: helpSVG,
+  };
+  icon4: FlexChildEndPointPercentagedIconState = {
+    id: "icon4",
+    svgId: "path-2",
+    orientation: "landscape",
+    alttext: "Settings Menu",
+    graphics: {
+      image: Resources.settingsSVG,
+    },
+    fontDetails: { fontColor: "whitesmoke" },
+    sizing: { landscape: { w: 10, h: 10 }, portrait: { w: 10, h: 10 }, padding: { top: 2, left: 2, right: 2, bottom: 2 } },
+    parentContainerId: "iconWrapper",
+    svgString: settingsSVG,
+  };
 
   public static template = `
     <style>
@@ -88,14 +139,27 @@ export class SubRoot2 extends FlexContainer {
         gap: \${dims.gap}px;
       }
     </style>
-    <div \${==>_element} id="\${_state.id}">
-       <\${Icon === icon1}>
-       <\${label === lable1State}>
-       <\${Icon === icon2}>
+    <div id="outerWrapper">
+      <div  \${!==isLandscape} id="\${_state.id}">
+        <\${Icon === icon1}>
+        <\${label === lable1State}>
+        <\${Icon === icon2}>
+      </div>
+      <div  \${===isLandscape} id="\${_state.id}">
+        <\${label === lable2State}>
+        <div id="iconWrapper" style="width: 100%; height: 20%; margin-bottom: 10px; justify-content: space-evenly; display: flex; flex-direction: column; gap: 20px; order: 2">
+          <\${Icon === icon3}>
+          <\${Icon === icon4}>
+        </div>
+      </div>
     </div>
   `;
 
   static create(containerState: FlexContainerState) {
     return new SubRoot2(containerState);
+  }
+
+  get isLandscape() {
+    return this._state.orientation === "landscape";
   }
 }

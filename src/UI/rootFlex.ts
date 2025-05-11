@@ -22,7 +22,7 @@ export class RootFlex extends FlexContainer {
   subRootState2: FlexContainerState = {
     id: "subroot2",
     orientation: "landscape",
-    sizing: { landscape: { w: 20, h: 95 }, portrait: { w: 90, h: 10 }, padding: 2 },
+    sizing: { landscape: { w: 20, h: 95 }, portrait: { w: 90, h: 10 }, padding: 5 },
     graphics: {
       backgroundImage: Resources.panel,
       nineSlice: {
@@ -37,7 +37,7 @@ export class RootFlex extends FlexContainer {
     flexControls: {
       flexDirection: "column",
       flexWrap: "nowrap",
-      justifyContent: "flex-start",
+      justifyContent: "space-between",
       alignItems: "center",
       gap: 3,
     },

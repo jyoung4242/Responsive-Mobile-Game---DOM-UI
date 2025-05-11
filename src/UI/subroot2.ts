@@ -25,7 +25,7 @@ export class SubRoot2 extends FlexContainer {
     fontDetails: {
       maxFont: 3,
       minFont: 1,
-      fontScale: 1,
+      fontScale: 2.5,
       fontColor: "white",
     },
     graphics: {
@@ -50,7 +50,7 @@ export class SubRoot2 extends FlexContainer {
     fontDetails: {
       maxFont: 3,
       minFont: 1,
-      fontScale: 1,
+      fontScale: 2.0,
       fontColor: "white",
     },
     graphics: {
@@ -71,20 +71,22 @@ export class SubRoot2 extends FlexContainer {
   Icon = FlexChildIcon;
   icon1: FlexChildEndPointPercentagedIconState = {
     id: "icon1",
-    svgId: "path-1",
+    pathId: "path-1",
+    svgId: "helpSVG",
     orientation: "landscape",
     alttext: "Help Menu",
     graphics: {
       image: Resources.helpSVG,
     },
-    fontDetails: { fontColor: "whitesmoke" },
+    fontDetails: { fontColor: "whitesmoke", fontScale: 1 },
     sizing: { landscape: { w: 10, h: 10 }, portrait: { w: 10, h: 10 }, padding: { top: 2, left: 2, right: 2, bottom: 2 } },
     parentContainerId: "subroot2",
     svgString: helpSVG,
   };
   icon2: FlexChildEndPointPercentagedIconState = {
     id: "icon2",
-    svgId: "path-2",
+    pathId: "path-2",
+    svgId: "settingsSVG",
     orientation: "landscape",
     alttext: "Settings Menu",
     graphics: {
@@ -97,27 +99,29 @@ export class SubRoot2 extends FlexContainer {
   };
   icon3: FlexChildEndPointPercentagedIconState = {
     id: "icon3",
-    svgId: "path-1",
+    pathId: "path-1",
+    svgId: "helpSVG",
     orientation: "landscape",
     alttext: "Help Menu",
     graphics: {
       image: Resources.helpSVG,
     },
     fontDetails: { fontColor: "whitesmoke" },
-    sizing: { landscape: { w: 10, h: 10 }, portrait: { w: 10, h: 10 }, padding: { top: 2, left: 2, right: 2, bottom: 2 } },
+    sizing: { landscape: { w: 30, h: 30 }, portrait: { w: 30, h: 30 }, padding: { top: 2, left: 2, right: 2, bottom: 2 } },
     parentContainerId: "iconWrapper",
     svgString: helpSVG,
   };
   icon4: FlexChildEndPointPercentagedIconState = {
     id: "icon4",
-    svgId: "path-2",
+    pathId: "path-2",
+    svgId: "settingsSVG",
     orientation: "landscape",
     alttext: "Settings Menu",
     graphics: {
       image: Resources.settingsSVG,
     },
     fontDetails: { fontColor: "whitesmoke" },
-    sizing: { landscape: { w: 10, h: 10 }, portrait: { w: 10, h: 10 }, padding: { top: 2, left: 2, right: 2, bottom: 2 } },
+    sizing: { landscape: { w: 30, h: 30 }, portrait: { w: 30, h: 30 }, padding: { top: 2, left: 2, right: 2, bottom: 2 } },
     parentContainerId: "iconWrapper",
     svgString: settingsSVG,
   };
@@ -147,7 +151,7 @@ export class SubRoot2 extends FlexContainer {
       </div>
       <div  \${===isLandscape} id="\${_state.id}">
         <\${label === lable2State}>
-        <div id="iconWrapper" style="width: 100%; height: 20%; margin-bottom: 10px; justify-content: space-evenly; display: flex; flex-direction: column; gap: 20px; order: 2">
+        <div id="iconWrapper" style="width: 100%; height: 25%; margin-bottom: 10px; margin-left: 10px; justify-content: space-evenly; display: flex; flex-direction: column; gap: 20px; order: 2">
           <\${Icon === icon3}>
           <\${Icon === icon4}>
         </div>

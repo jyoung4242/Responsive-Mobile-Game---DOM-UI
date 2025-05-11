@@ -68,7 +68,7 @@ export class FlexChildLabel {
             #\${_state.id} > span {
                 display: block;
                 color: \${_state.fontDetails.fontColor};
-                font-size: clamp(\${_state.fontDetails.minFont}rem, \${_state.fontDetails.fontScale}em, \${_state.fontDetails.maxFont}rem);
+                font-size: \${_state.fontDetails.fontScale}em; 
                 width: 100%;
             }
         </style>

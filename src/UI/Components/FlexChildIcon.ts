@@ -6,6 +6,7 @@ type PercentOfParent = number;
 export type FlexChildEndPointPercentagedIconState = {
   id: string;
   svgId: string; // ID of the SVG element
+  pathId: string; // ID of the path element
   orientation: string;
   sizing: {
     landscape: { w: PercentOfParent; h: PercentOfParent };
@@ -35,6 +36,7 @@ export type FlexChildEndPointPercentagedIconState = {
 export class FlexChildIcon {
   resizeSignal = new Signal("resize");
   private _svgElement: HTMLElement | undefined = undefined;
+  private _pathElement: HTMLElement | undefined = undefined;
   private _element: HTMLButtonElement | undefined = undefined;
   private _state: FlexChildEndPointPercentagedIconState;
 
@@ -50,6 +52,7 @@ export class FlexChildIcon {
                 user-select: none;
                 appearance: none;
                 cursor: pointer;
+                font-size: \${_state.fontDetails.fontScale}em;
                 
             }
             #\${_state.id} > img {
@@ -70,13 +73,16 @@ export class FlexChildIcon {
     this.resizeSignal.listen((params: CustomEvent) => {
       let orientation = params.detail.params[0];
       this._state.orientation = orientation;
+      this._element!.setAttribute("width", `${this.dims.w}px`);
+      this._element!.setAttribute("height", `${this.dims.h}px`);
     });
     setTimeout(() => {
       if (!this._element) return;
       this._element.innerHTML = this._state.svgString;
       this._svgElement = document.getElementById(this._state.svgId) as HTMLElement;
       this._svgElement.setAttribute("fill", this._state.fontDetails?.fontColor || "white");
-      console.log(this._svgElement);
+      this._svgElement.setAttribute("width", `${this.dims.w}px`);
+      this._svgElement.setAttribute("height", `${this.dims.h}px`);
     }, 25);
   }
 
